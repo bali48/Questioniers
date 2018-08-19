@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 
-    <?php
+<?php
 require './header.php';
+require '../Model/QuizModel.php';
 $quizlist = new QuizModel();
 
 

@@ -1,12 +1,15 @@
 <?php
+require_once '../Model/QuizModel.php';
 
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
-//require_once 'connection.php';
-if(isset($_POST['name'])){
-    var_dump($_POST);exit();
+if(isset($_POST['GetQuestionparams'])){
+    $TestID = $_POST['GetQuestionparams']['TestID'];
+    $OffSet = $_POST['GetQuestionparams']['OffSet'];
+    $quizlist = new QuizModel();
+    $quizes = $quizlist->GetQuestioniers($TestID,$OffSet);
+    if($quizes != NULL){
+        print_r(json_encode($quizes,JSON_PRETTY_PRINT));
+    } else {
+        print_r(json_encode(array('error' => 'No Record Found'),JSON_PRETTY_PRINT));
+    }
+    
 }

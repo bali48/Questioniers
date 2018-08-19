@@ -1,12 +1,5 @@
 <?php
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 
-require '../Controller/main_controller.php';
-include '../Model/QuizModel.php';
 define('base_url', 'localhost/Questioniers/');
 define('pageTitle', 'MSQ')
 ?>
@@ -20,6 +13,9 @@ define('pageTitle', 'MSQ')
         <!-- FontAwesome 4.3.0 -->
         <link href="../assets/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
         <link href="../assets/css/customcss.css" rel="stylesheet" type="text/css" />
+        <!-- jQuery-2.1.4.min -->
+        <script src="../assets/js/jQuery-2.1.4.min.js"></script>
+        <script src="../assets/js/ajaxhandler.js"></script>
     </head>
     <body>
         

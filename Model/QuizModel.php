@@ -1,6 +1,6 @@
 <?php
 
-require '../Controller/connection.php';
+//require '../Controller/connection.php';
 
 class QuizModel {
 
@@ -24,7 +24,7 @@ class QuizModel {
 
         $table = 'tbl_quiz';
         $query = 'select QuizID, QuizName';
-        $query .= ' From '.$table;
+        $query .= ' From ' . $table;
         //$output = $ths->db->query();
         $output = mysqli_query($this->db, $query);
         $result = NULL;
@@ -37,13 +37,50 @@ class QuizModel {
         //return $result;
 //        $conn
     }
-    
-    public function GetQuestioniers($qid){
+
+    public function GetQuestioniers($qid, $offset) {
+
+        $table1 = 'tbl_quiz_questions';
+        $Parentquery = 'select QuizQuestionsID, ActualQuestion';
+        $Parentquery .= ' From ' . $table1;
+        $Parentquery .= ' WHERE quizID =' . $qid;
+        $Parentquery .= ' LIMIT 1 OFFSET ' . $offset;
+        $Parentoutput = mysqli_query($this->db, $Parentquery);
+        $ParentResult = mysqli_fetch_assoc($Parentoutput);
+        if ($ParentResult != NULL) {
+
+            $table2 = 'tbl_quiz_answers';
+            $Childquery = 'select QuizAnswersID, Answer, IsValid';
+            $Childquery .= ' From ' . $table2;
+            $Childquery .= ' WHERE QuizQuestionsID =' . $ParentResult['QuizQuestionsID'];
+            $Childoutput = mysqli_query($this->db, $Childquery);
+            $AnswerArray = array();
+            while ($row = mysqli_fetch_assoc($Childoutput)) {
+                $AnswerArray[] = $row;
+            }
+
+            $result = array(
+                'QuizQuestionsID' => $ParentResult['QuizQuestionsID'],
+                'ActualQuestion' => $ParentResult['ActualQuestion'],
+                'Answers' => $AnswerArray
+            );
+            return $result;
+        } else {
+            $result = NULL;
+            return $result;
+        }
+    }
+
+    public function GetQuestionsCount($testid) {
         $table = 'tbl_quiz_questions';
-        $query = 'select QuizQuestionsID, ActualQuestion';
-        $query .= ' From '.$table;
-        $query .= ' WHERE quizFK ='.$qid;
-        
+        $query = 'select Count(QuizID) as rows';
+        $query .= ' From ' . $table;
+        $query .= ' Where quizID = ' . $testid;
+        //$output = $ths->db->query();
+        $output = mysqli_query($this->db, $query);
+        $row = NULL;
+        $row = mysqli_fetch_assoc($output);
+        return $row;
     }
 
 }

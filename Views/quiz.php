@@ -7,107 +7,51 @@ session_start();
  * and open the template in the editor.
  */
 require './header.php';
+require '../Model/QuizModel.php';
 //$quizlist = new QuizModel();
 //$quizes = $quizlist->GetQuizList();
 
 if (isset($_GET['name'], $_GET['test'])) {
     $_SESSION['name'] = $_GET['name'];
-}
-?>
+    $quizlist = new QuizModel();
+    $quizesCount = $quizlist->GetQuestionsCount($_GET['test']);
+    $numberofquestions = $quizesCount['rows'];
+    if($numberofquestions == 0 || $numberofquestions == NULL){
+        echo '<h1> Sorry No Question Availible </h1>';
+        
+    }else{
+        $testid = $_GET['test'];
+    ?>
+<script>
+    var QuestionsCount = <?php echo $numberofquestions ?>;
+    var TotalResult = 0;
+GetQuestion(<?php echo $_GET['test']; ?>,0);
+</script>
+
+
 <style>
-    body{
-        text-align: center;
-    }
 
-    .mcq{
-        position: relative;
-        display: block;
-        margin:50px auto;
-        width: 900px;
-        height: 50%;
-        /*background-color: crimson;*/ 
-        border-radius: 5px;
-        padding:10px;
-        border:5px solid #c51236;   
-    }                                                                                                                      
-    .quiz{
-        display: block;
-        padding:10px;  
-    }
-    .quiz .output{
-        position: relative;
-        padding: 10px;
-        margin-bottom: 10px;                            
-    }
-    .output p{
-        padding: 10px;
-        line-height: 30px;
-        font-size: 26px;
-
-        border-radius: 5px;
-        margin-bottom: 5px;
-    }
-    .next{  
-        display: block; 
-        width: 50%;
-        margin: 0 auto;
-    } 
-    
 </style>
 <div class="mcq">
     <div class="quiz">
         <div class="output">
-            <p>Who Are You ?</p>
-            <form>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="btn btn-primary">
-                                <input checked="checked" data-val="true" data-val-required="The IsSmallBusiness field is required." id="IsSmallBusiness" name="IsSmallBusiness" value="False" type="radio">
-                                IndividualIndividual
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="btn btn-primary">
-                                <input checked="checked" data-val="true" data-val-required="The IsSmallBusiness field is required." id="IsSmallBusiness" name="IsSmallBusiness" value="False" type="radio">
-                                IndividualIndividual
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="btn btn-primary">
-                                <input checked="checked" data-val="true" data-val-required="The IsSmallBusiness field is required." id="IsSmallBusiness" name="IsSmallBusiness" value="False" type="radio">
-                                IndividualIndividual
-                            </label>
-                        </div>
-                    </div>
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label class="btn btn-primary">
-                                <input checked="checked" data-val="true" data-val-required="The IsSmallBusiness field is required." id="IsSmallBusiness" name="IsSmallBusiness" value="False" type="radio">
-                                IndividualIndividual
-                            </label>
-                        </div>
-                    </div>
-
-                </div>
-
-            </form>
+            
         </div>
         <div class="progress">
-            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width:40%">
-
+            <div class="progress-bar progress-bar-striped active" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width:0%">
+                <input type="hidden" id='offset' value="0">
+                
             </div>
         </div>
     </div>
     
-    <div class="next btn  btn-default">Next</div>   
+    <button class="next btn  btn-default" onclick="nextQuestion(<?php echo $testid; ?>)">Next</button>   
+    <button class="done btn  btn-default" style="display: none;" onclick="FinalizeResult()">View Result</button>   
 </div>
 <?php
+
+    }
+}
 
 include './footer.php';
 /*
